@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>resipippi</title>
+    <link rel="stylesheet" href="sheet/CookingMam.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link rel="stylesheet" href="sheet/practice.css">
+</head>
+
+<body>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $(function() {
+            // ボタンを押したら通信する関数を起動
+            $("#bt").click(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "sample.php",
+                    dataType: 'json',
+                    // 通信に成功したとき新たな関数を起動しここにHTMLに表示するコードを書く
+                }).done(function(data) {
+                    getRecipeData(data);
+                })
+            });
+        });
+
+        function getRecipeData(result) {
+            $(".resipi_container").replaceWith(`
+    <div class="resipi_container">
+        <div class="resipi_title">
+            <h2 class="back_resipi_name">${result.recipe_name}</h2>
+        </div>            
+
+        <div class="back_img">
+        <img class="back_img" src=".${result.img_path}">
+        </div>
+
+        <p class="back_comment">${result.comment}</p>
+
+        <div class=food_frame>
+            <ul id="back_resipi_food">
+                <h2 id="source">材料</h2>
+            </ul>
+        </div>
+
+        <hr>
+
+        <div class="step_frame">
+            <ul id="back_resipi_step">
+            </ul>
+        </div>
+    </div>
+    `);
+            for (food of result.food_list) {
+                $("#back_resipi_food").append(`<hr><li>${food.food_name}</li><li><span class="volume">${food.volume}</span></li>`);
+            }
+            for (let i = 0; i < result.step.length; i++) {
+                $("#back_resipi_step").append(`<li><h2>${i + 1}</h2><span>${result.step[i]}`);
+            }
+        }
+    </script>
+
+    <!-- メインヘッダー -->
+    <div class="header_page">
+        <!-- サブヘッダー -->
+        <div id="header">
+            <div class="first_header">
+                <!-- アイコン枠 -->
+                <div class="img_frame">
+                    <!-- トップアイコン -->
+                    <a href="resipippi_complete.html"><img src="resipippi_use_icon.png" alt="cook" class="top_icon"></a>
+                </div>
+                <!-- メニュー枠（インターフェース） -->
+                <div class="menu_icon_frame">
+                    <!-- 二つ分のメニュー枠 -->
+                    <div class="frame_set">
+                        <!-- 左側ユーザーメイン枠 -->
+                        <div class="left_button">
+                            <!-- 左のユーザーサブ枠 -->
+                            <div class="left_icon_set">
+                                <!-- ユーザーアイコン -->
+                                <a href="userpage.php"><i class="fas fa-user fa-3x"></i></a>
+                            </div>
+                        </div>
+                        <!-- 右側レシピメイン枠 -->
+                        <div class="right_button">
+                            <!-- 右側レシピサブ枠 -->
+                            <div class="rigtht_icon_set">
+                                <!-- フォルダーアイコン -->
+                               <a href="folder.html"><i class="fas fa-folder fa-3x"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sub_header">
+            <!-- 入力フォームのまとまり -->
+            
+                <div class="buttun_frame">
+                    <a href="#" class="cp_btn" id="bt" >スタート</a>
+                </div>
+            
+            <form action="fake_link.html" class="header_from">
+                <!-- 入力フォーム -->
+                <input type="text" id="inp" placeholder="食材・料理">
+                <!-- 検索ボタン_虫眼鏡アイコン -->
+                <button type="submit" id="subbtn"><i class="fas fa-search"></i> </button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- -------------------------------------------------------------------------->
+
+
+    <div class="resipi_container">
+        <!-- レシピの名前＜ｈ２＞に -->
+        <h2 id="resipi_name"></h2>
+        <!-- レシピのコメント＜ｐ＞に -->
+        <div id="resipi_comment"></div>
+        <!-- レシピの画像のパス＜Div＞に -->
+        <div id="resipi_img"></div>
+        <!-- レシピの手順を＜li＞に -->
+        <ul id="resipi_step"></ul>
+        <!-- レシピに使う食材を<li>に -->
+        <ol id="resipi_food"></ol>
+    </div>
+</body>
+
+</html>
